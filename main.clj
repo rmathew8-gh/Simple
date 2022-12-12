@@ -1,10 +1,9 @@
-;; (reduce + (range 10))              
-;; (transduce xform f coll)
-;; (transduce xform f init coll)
-
 (let
- [map (fn [f coll]
-        (when (< 0 (count coll))
-          (conj (map f (rest coll))
-                (f (first coll)))))]
-  (map inc [1 2 3]))
+ [filt (fn [f coll]
+         (when (< 0 (count coll))
+           (let [[fst & rst] coll]
+             (if (f fst)
+               (conj (filt f rst) fst)
+               (filt f rst)))))]
+  (filt odd? (range 10)))
+
